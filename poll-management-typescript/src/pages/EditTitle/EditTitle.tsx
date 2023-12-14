@@ -20,7 +20,7 @@ const EditTitle = () => {
         },
     });
 
-    const handleTitleChange = (e) => {
+    const handleTitleChange = (e:any) => {
         formik.handleChange(e);
     };
 

@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import  { dispatch } from "../store";
 import Instance from "../Axios/Instance";
 
 const initialState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: [],
+  data: {},
 };
 
-const signIn = createSlice({
-  name: "signin",
+const signUp = createSlice({
+  name: "signUp",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
@@ -27,9 +26,9 @@ const signIn = createSlice({
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.errorMessage = action.payload;
+      // state.errorMessage = action.payload;
     },
-    resetReducer(state) {
+    signupResetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
@@ -38,18 +37,22 @@ const signIn = createSlice({
   },
 });
 
-export const signInApi = async (payload) => {
-  dispatch(startLoading());
+export const signUpApi = (payload:any) => async (dispatch:any) => {
   try {
     let response = await Instance.post(
-      `login?username=${payload.name}&password=${payload.password}`
+      `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
     );
-    dispatch(signIn.actions.loginSuccessful(response.data));
+    // id name passsowrd role.
+    // data-- responce ()
+    // let response2 = await Instance.post(
+    //   `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
+    // );
+    // token(save) local.setItem('token', JSON.stringify(response2.data.token))
+    dispatch(signUp.actions.loginSuccessful(response.data));
   } catch (e) {
-    dispatch(signIn.actions.hasError(e));
+    dispatch(signUp.actions.hasError(e));
   }
 };
-export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  signIn.actions;
+export const { startLoading, loginSuccessful, hasError, signupResetReducer } = signUp.actions;
 
-export default signIn.reducer;
+export default signUp.reducer;

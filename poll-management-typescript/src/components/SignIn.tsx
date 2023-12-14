@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { signInScheema } from "../schemas";
 import "../components/stylecss/style.css";
 import { useSelector } from "react-redux";
 import { resetReducer, signInApi } from "../redux/Slices/signinSlice";
@@ -10,18 +9,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import { dispatch } from "../redux/store";
+import { signInScheema } from "../schemas";
+import { Dispatch } from "react";
 
-const SignIn = () => {
+const SignIn  = () => {
   const ref = useRef(null);
   const [autoSignin, setAutoSignin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [buttonDisable, setButtonDisable] = useState(false);
-  const signinSlice = useSelector((state) => state.signIn);
+  const signinSlice = useSelector((state:any)=> state.signIn);
   const status = signinSlice.loading;
   useEffect(() => {
     if (signinSlice.isSuccess && signinSlice.data.token) {
-      const decode = jwtDecode(signinSlice.data.token);
+      const decode :any = jwtDecode(signinSlice.data.token);
       localStorage.setItem("token", signinSlice.data.token);
       localStorage.setItem("role", decode.role);
       dispatch(resetReducer());
@@ -60,7 +61,6 @@ const SignIn = () => {
       ref.current.click();
     }
     navigate("/");
-    // localStorage.clear();
   }, [autoSignin]);
   
   let token = localStorage.getItem('token');
@@ -119,7 +119,7 @@ const SignIn = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={
-                <Typography variant="p" color={"red"}>
+                <Typography color={"red"}>
                   {formik.errors.password &&
                     formik.touched.password &&
                     formik.errors.password}
@@ -141,7 +141,7 @@ const SignIn = () => {
               </Button>
             )}
           </Stack>
-          <NavLink style={{ color: "#1565c0" }} to={"/signup"} variant="body2">
+          <NavLink style={{ color: "#1565c0" }} to={"/signup"}>
             Don't have an account? Register now
           </NavLink>
         </Stack>

@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+
+
 export const signUpSchema = Yup.object({
   name: Yup.string()
     .min(3, "Username should be in 3 letter")
@@ -15,6 +17,9 @@ export const signUpSchema = Yup.object({
     .oneOf([Yup.ref("password"), null], "Passwords don't match")
     .required("Confirm your password!"),
 });
+
+
+
 export const signInScheema = Yup.object({
   name: Yup.string()
     .min(3, "Username should be in 3 letter")
