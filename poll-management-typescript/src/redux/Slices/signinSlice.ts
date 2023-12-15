@@ -1,8 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
-import  { dispatch } from "../store";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
+import { AppDispatch } from "../store";
+interface LoginState {
+  loading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  data: string[] ;
+}
 
-const initialState = {
+const initialState:LoginState = {
   loading: false,
   isError: false,
   isSuccess: false,
@@ -17,35 +23,35 @@ const signIn = createSlice({
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    loginSuccessful: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
       state.data = { ...action.payload };
     },
-    hasError: (state, action) => {
+    hasError: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.errorMessage = action.payload;
+      state.data = action.payload;
     },
     resetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
-      state.data = {};
+      state.data = [];
     },
   },
 });
 
-export const signInApi = async (payload:any) => {
+export const signInApi =  (payload:{name:string,password:string})=>async (dispatch:AppDispatch) => {
   dispatch(startLoading());
   try {
     let response = await Instance.post(
       `login?username=${payload.name}&password=${payload.password}`
     );
     dispatch(signIn.actions.loginSuccessful(response.data));
-  } catch (e) {
+  } catch (e:any) {
     dispatch(signIn.actions.hasError(e));
   }
 };

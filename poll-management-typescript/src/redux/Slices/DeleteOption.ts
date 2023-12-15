@@ -1,11 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
+import { AppDispatch } from "../store";
+interface LoginState {
+loading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  data: string[] ;
+}
 
-const initialState = {
+const initialState:LoginState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: {},
+  data: [],
 };
 
 const DeleteOption = createSlice({
@@ -16,28 +23,28 @@ const DeleteOption = createSlice({
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    loginSuccessful: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
       state.data = { ...action.payload };
     },
-    hasError: (state, action) => {
+    hasError: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.errorMessage = action.payload;
+      state.data = action.payload;
     },
     resetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
-      state.data = {};
+      state.data = [];
     },
   },
 });
 
-export const DeleteOptionApi = (optionInd, optionText) => async (dispatch) => {
+export const DeleteOptionApi = (optionInd:string, optionText:string) => async (dispatch:AppDispatch) => {
   dispatch(startLoading());
   try {
     let response = await Instance.post(
@@ -45,7 +52,7 @@ export const DeleteOptionApi = (optionInd, optionText) => async (dispatch) => {
     );
     dispatch(loginSuccessful(response.data));
     console.log(response.data);
-  } catch (e) {
+  } catch (e:any) {
     dispatch(hasError(e));
   }
 };

@@ -1,31 +1,32 @@
+import React, { useEffect, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
-import React, { useEffect } from "react";
-import {  useNavigate } from "react-router-dom";
+interface ProtectedProps {
+  children: ReactNode;
+}
 
-const Protected = (props) => {
+const Protected: React.FC<ProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
-  
+
   useEffect(() => {
     const checkAuthentication = () => {
-      if(token){
-
-        if(role ==='Guest'){
-          navigate('/userPoll')
-        }else if(role==='Admin'){
-          navigate('/admin')
+      if (token) {
+        if (role === 'Guest') {
+          navigate('/userPoll');
+        } else if (role === 'Admin') {
+          navigate('/admin');
         }
-      }
-      else if(token===null){
-        navigate('/')
+      } else if (token === null) {
+        navigate('/');
       }
     };
 
     checkAuthentication();
-  }, [token,role]);
+  }, [token, role]);
 
-  return <div>{props.children}</div>;
+  return <>{children}</>; 
 };
 
 export default Protected;

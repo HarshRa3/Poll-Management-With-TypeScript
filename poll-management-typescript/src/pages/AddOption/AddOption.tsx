@@ -1,21 +1,23 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { dispatch } from "../../redux/store";
 import {  useFormik } from "formik";
-import React from "react";
+
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { AddOptionApi } from "../../redux/Slices/AddOption";
-
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
 const AddOption = () => {
+  const dispatch:AppDispatch=useDispatch()
   const location = useLocation();
   const navigate = useNavigate();
-  const optionId  = useParams();
+  const optionId  = useParams() as { optionDataId: string };
   const formik = useFormik({
     initialValues: {
       option: "",
     },
-    onSubmit: (values) => {
+
+    onSubmit: (values:any) => {
       if(values.option.trim() !== ''){
-        dispatch(AddOptionApi(optionId.optionDataId,values ));
+        dispatch(AddOptionApi(optionId.optionDataId,values));
         navigate('/admin')     
       }
       else{}
@@ -39,7 +41,7 @@ const AddOption = () => {
           <Button variant="contained" type="submit" disabled={!formik.dirty} >
             Submit
           </Button>
-          <Link to={"/admin"} width="100%">
+          <Link to={"/admin"} style={{width:'100%'}}>
             <Button sx={{ width: "100%" }} variant="contained">
               Cancel
             </Button>

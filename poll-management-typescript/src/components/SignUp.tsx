@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signupResetReducer,
   signUpApi,
@@ -23,12 +23,32 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from "@mui/material/CircularProgress";
-import { dispatch } from "../redux/store";
-const SignUp = () => {
-  type stylePorps={varient:string}
+import { AppDispatch } from "../redux/store";
+import { RootState } from "../redux/rootReducer";
+interface LoginData {
+  name: string;
+  password: string;
+  confirm_password:string;
+  role:string;
+}
+
+interface Decode {
+  role: string;
+}
+
+interface LoginSliceState {
+  data: {
+    token?: string;
+    error?: number;
+  };
+  loading: boolean;
+  isSuccess: boolean;
+}
+const SignUp: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const location = useNavigate();
   const [buttonDisable, setButtonDisable] = useState(false);
-  const signupSlice = useSelector((state:any) => state.signUp);
+  const signupSlice = useSelector((state:RootState) => state.signUp) as LoginSliceState;
   const statuS = signupSlice.loading;
 
   useEffect(() => {
@@ -52,7 +72,7 @@ const SignUp = () => {
       role: "Guest",
     },
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
+    onSubmit: (values:LoginData) => {
       try {
         dispatch(startLoading());
         dispatch(signUpApi(values));

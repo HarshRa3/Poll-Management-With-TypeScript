@@ -1,6 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-const PollItem = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
+// interface pollItemProps{
+//   title:any;
+//   InnerOption:any;
+//   deleteTitle:any;
+//   AddTitle:any;
+//   EditTitle:any  
+// }
+const PollItem:React.FC<any> = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
   return (
     <>
       <Stack

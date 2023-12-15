@@ -1,5 +1,5 @@
 import React from 'react'
-import Router from '../src/router/Router.js'
+import Router from '../src/router/Router'
 const App = () => {
   return (
     <div>

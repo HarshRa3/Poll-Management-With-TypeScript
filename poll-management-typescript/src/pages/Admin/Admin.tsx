@@ -17,33 +17,64 @@ import RefereshAnimation from "../../components/RefereshAnimation";
 import { AdminPollApi } from "../../redux/Slices/AdminPoll";
 import { DeleteOptionApi } from "../../redux/Slices/DeleteOption";
 import { DeleteTitleApi } from "../../redux/Slices/DeleteTitle";
+import { RootState } from "../../redux/rootReducer";
+import { AppDispatch } from "../../redux/store";
 
-const Admin = () => {
-  const dispatch = useDispatch();
+interface Option {
+  option: string;
+  vote: number;
+}
+
+interface PollData {
+  title: string;
+  _id: string;
+  options: Option[];
+}
+
+interface PollListInter {
+  AdminPoll: {
+    data: PollData[];
+  };
+}
+
+const Admin: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [deleteTitleId, setDeleteId] = useState(null);
-  const [optionData, setOptionData] = useState(null);
-  const pollList = useSelector((state) => state.AdminPoll);
-  // console.log(pollList.data);
+  const [deleteTitleId, setDeleteId] = useState<string | null>(null);
+  const [optionData, setOptionData] = useState<string | null>(null);
+  const pollList = useSelector((state: PollListInter) => state.AdminPoll);
+
   const deleteOptionLoading = useSelector(
-    (state) => state.DeleteOption.loading
+    (state: RootState) => state.DeleteOption.loading
   );
-  const deleteTitleLoading = useSelector((state) => state.DeleteTitle.loading);
-  const EditTitleLoading = useSelector((state) => state.EditTitle.loading);
-  const AddPollLoading = useSelector((state) => state.AddPoll.loading);
-  const AddOptionLoading = useSelector((state) => state.AddOption.loading);
+  const deleteTitleLoading = useSelector(
+    (state: RootState) => state.DeleteTitle.loading
+  );
+  const EditTitleLoading = useSelector(
+    (state: RootState) => state.EditTitle.loading
+  );
+  const AddPollLoading = useSelector((state: RootState) => state.AddPoll.loading);
+  const AddOptionLoading = useSelector(
+    (state: RootState) => state.AddOption.loading
+  );
+
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
   const rowsPerPageOptions = [5, 10, 15];
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
-  const handleRowPerPageChange = (event) => {
-    const newRowsPerPage = parseInt(event.target.value, 10);
+  const handleRowPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newRowsPerPage: any = parseInt(event.target.value, 10);
     setRowPerPage(newRowsPerPage);
     setPage(0);
     localStorage.setItem("rowpage", newRowsPerPage);
@@ -54,18 +85,21 @@ const Admin = () => {
     navigate("/");
   };
 
-  const deleteOptionData = (pollId, option, options) => {
-    console.log(options.length);
+  const deleteOptionData = (
+    pollId: string,
+    option: { option: string },
+    options: Option[]
+  ) => {
     if (options.length <= 1) {
       dispatch(DeleteTitleApi(pollId));
       setDeleteId(pollId);
     } else {
       dispatch(DeleteOptionApi(pollId, option.option));
-      setOptionData(option);
+      setOptionData(option.option);
     }
   };
-  
-  const deleteTitleData = (titleID) => {
+
+  const deleteTitleData = (titleID: string) => {
     dispatch(DeleteTitleApi(titleID));
     setDeleteId(titleID);
   };
@@ -94,8 +128,8 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("page", page);
-    localStorage.setItem("rowpage", rowPerPage);
+    localStorage.setItem("page", JSON.stringify(page));
+    localStorage.setItem("rowpage", JSON.stringify(rowPerPage));
   }, [page, rowPerPage]);
 
   if (loading) {
@@ -106,25 +140,25 @@ const Admin = () => {
     page * rowPerPage,
     page * rowPerPage + rowPerPage
   );
+
   const pagee = () => {
     return page >= Math.ceil(pollList.data.length / rowPerPage)
       ? Math.max(0, Math.ceil(pollList.data.length / rowPerPage) - 1)
       : page;
   };
-  const Authentication=()=>{
-    const token=localStorage.getItem('token')
-    const role=localStorage.getItem('role')
-    if(token){
 
-      if(role==='Admin'){
-        return <Outlet/>
-      }else if( role==='user'){
-        navigate('/userPoll')
+  const Authentication = () => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    if (token) {
+      if (role === "Admin") {
+        return <Outlet />;
+      } else if (role === "user") {
+        navigate("/userPoll");
       }
     }
+  };
 
-    }
-  
   return (
     <Box
       sx={{
@@ -137,10 +171,7 @@ const Admin = () => {
       <Box sx={{ textAlign: "center" }}>
         <Typography variant="h3"> Welcome to Admin Poll</Typography>
       </Box>
-      <NavLink
-        style={{ textDecoration: "none", color: "black" }}
-        to={"addPoll"}
-      >
+      <NavLink style={{ textDecoration: "none", color: "black" }} to={"addPoll"}>
         <Typography variant="h5" textAlign={"center"}>
           Add Poll +
         </Typography>
@@ -159,7 +190,11 @@ const Admin = () => {
               title={dataList.title}
               key={dataList._id}
               EditTitle={
-                <Link to={`EditTitle/${dataList._id}`} style={{color:'black'}} state={dataList.title}>
+                <Link
+                  to={`EditTitle/${dataList._id}`}
+                  style={{ color: "black" }}
+                  state={dataList.title}
+                >
                   <EditIcon />
                 </Link>
               }
@@ -185,13 +220,13 @@ const Admin = () => {
                   />
                 )
               }
-              InnerOption={dataList.options.map((option, index) => (
+              InnerOption={dataList.options.map((option: Option, index: number) => (
                 <InnerPoll
                   option={option.option}
                   key={index}
                   votes={option.vote}
                   deleteOption={
-                    optionData === option && deleteOptionLoading ? (
+                    optionData === option.option && deleteOptionLoading ? (
                       <CircularProgress color="inherit" />
                     ) : (
                       <DeleteIcon

@@ -1,11 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
+import { AppDispatch } from "../store";
+interface LoginState {
+  loading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  data: string[] ;
+}
 
-const initialState = {
+const initialState:LoginState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: {},
+  data: [],
 };
 
 const signUp = createSlice({
@@ -16,40 +23,34 @@ const signUp = createSlice({
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    loginSuccessful: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
       state.data = { ...action.payload };
     },
-    hasError: (state, action) => {
+    hasError: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      // state.errorMessage = action.payload;
+      state.data = action.payload;
     },
     signupResetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
-      state.data = {};
+      state.data = [];
     },
   },
 });
 
-export const signUpApi = (payload:any) => async (dispatch:any) => {
+export const signUpApi = (payload:{name:string,password:string,role:string}) => async (dispatch:AppDispatch) => {
   try {
     let response = await Instance.post(
       `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
     );
-    // id name passsowrd role.
-    // data-- responce ()
-    // let response2 = await Instance.post(
-    //   `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
-    // );
-    // token(save) local.setItem('token', JSON.stringify(response2.data.token))
     dispatch(signUp.actions.loginSuccessful(response.data));
-  } catch (e) {
+  } catch (e:any) {
     dispatch(signUp.actions.hasError(e));
   }
 };

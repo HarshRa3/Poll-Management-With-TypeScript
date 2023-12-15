@@ -1,6 +1,9 @@
 import { Box, Stack, Typography } from '@mui/material'
 import React from 'react'
-const InnerPoll = ({option,votes,deleteOption}) => {
+// interface InnerPropsType{
+//   option:string,votes:number,deleteOption:any
+// }
+const InnerPoll:React.FC<any> = ({option,votes,deleteOption}) => {
   return (
     <Stack
           direction={"row"}
