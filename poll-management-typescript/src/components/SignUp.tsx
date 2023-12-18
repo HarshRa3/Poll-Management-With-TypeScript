@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { NavLink, Navigate, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import "../components/stylecss/style.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signupResetReducer,
   signUpApi,
@@ -23,12 +23,28 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from "@mui/material/CircularProgress";
-import { dispatch } from "../redux/store";
+import { AppDispatch } from "../redux/store";
+import { RootState } from "../redux/rootReducer";
+interface LoginData {
+  name: string;
+  password: string;
+  confirm_password:string;
+  role:string;
+}
 
-const SignUp = () => {
+interface LoginSliceState {
+  data: {
+    token?: string;
+    error?: number;
+  };
+  loading: boolean;
+  isSuccess: boolean;
+}
+const SignUp: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const location = useNavigate();
   const [buttonDisable, setButtonDisable] = useState(false);
-  const signupSlice = useSelector((state) => state.signUp);
+  const signupSlice = useSelector((state:RootState) => state.signUp) as LoginSliceState;
   const statuS = signupSlice.loading;
 
   useEffect(() => {
@@ -52,7 +68,7 @@ const SignUp = () => {
       role: "Guest",
     },
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
+    onSubmit: (values:LoginData) => {
       try {
         dispatch(startLoading());
         dispatch(signUpApi(values));
@@ -88,8 +104,8 @@ const SignUp = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={
-                <Typography variant="p" color={"red"}>
-                  {formik.errors.name &&
+                <Typography color={"red"}>
+                {formik.errors.name &&
                     formik.touched.name &&
                     formik.errors.name}
                 </Typography>
@@ -107,7 +123,7 @@ const SignUp = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={
-                <Typography variant="p" color={"red"}>
+                <Typography color={"red"}>
                   {formik.errors.password &&
                     formik.touched.password &&
                     formik.errors.password}
@@ -126,7 +142,7 @@ const SignUp = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={
-                <Typography variant="p" color={"red"}>
+                <Typography color={"red"}>
                   {formik.errors.confirm_password &&
                     formik.touched.confirm_password &&
                     formik.errors.confirm_password}
@@ -172,7 +188,6 @@ const SignUp = () => {
             <NavLink
               style={{ color: "#1565c0" }}
               to={"/"}
-              variant="body2"
             >
               Already have an account? Sign in
             </NavLink>

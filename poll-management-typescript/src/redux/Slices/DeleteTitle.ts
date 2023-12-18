@@ -1,57 +1,64 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
-import { dispatch } from "../store";
+import { AppDispatch } from "../store";
+interface LoginState {
+  loading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  data: string[] ;
+}
 
-const initialState = {
+const initialState:LoginState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: {},
+  data: [],
 };
 
-const EditTitle = createSlice({
-  name: "EditTitle",
+const DeleteTitle = createSlice({
+  name: "DeleteTitle",
   initialState: initialState,
   reducers: {
     startLoading: (state) => {
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    loginSuccessful: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
       state.data = { ...action.payload };
     },
-    hasError: (state, action) => {
+    hasError: (state, action:PayloadAction<string[]>) => {
+
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.errorMessage = action.payload;
+      state.data = action.payload;
     },
     resetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
-      state.data = {};
+      state.data = [];
     },
   },
 });
 
-export const EditTitleApi = (titleId, titleData) => async () => {
+export const DeleteTitleApi = (payload:string) => async (dispatch:AppDispatch) => {
   dispatch(startLoading());
   try {
-    let response = await Instance.post(
-      `update_poll_title?id=${titleId}&title=${titleData}`
+    let response = await Instance.delete(
+      `delete_poll?id=${payload}`
     );
     dispatch(loginSuccessful(response.data));
-    console.log(response.data);
   } catch (e) {
-    dispatch(hasError(e));
+    console.log(e);
+    
   }
 };
 
 export const { startLoading, loginSuccessful, hasError, resetReducer } =
-  EditTitle.actions;
+  DeleteTitle.actions;
 
-export default EditTitle.reducer;
+export default DeleteTitle.reducer;

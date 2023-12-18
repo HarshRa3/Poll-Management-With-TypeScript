@@ -6,10 +6,19 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useFormik } from "formik";
 import { AddPollApi, resetReducer } from "../../redux/Slices/AddPoll";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { dispatch } from "../../redux/store";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
+
+
+interface Option {
+  option: string;
+}
+
+
 const AddPoll = () => {
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const [newOption, setNewOption] = useState([{ option: "" }]);
+  const [newOption, setNewOption] = useState<Option[]>([{ option: "" }]);
   const increseLength = () => {
     if (newOption.length < 4) {
       setNewOption([...newOption, { option: "" }]);
@@ -26,13 +35,8 @@ const AddPoll = () => {
       toast.error("One Option is necessary");
     }
   };
-  const handleChange = (event, index) => {
-    const { name, value } = event.target;
-    const onchangeValue = [...newOption];
-    onchangeValue[index][name] = value;
-    setNewOption(onchangeValue);
-  };
-  const hasDuplecates = (newOption) => {
+
+  const hasDuplecates = (newOption:Option[]) => {
     let valueSet = new Set(
       newOption.map((e) => {
         return e.option.trim();
@@ -70,6 +74,15 @@ const AddPoll = () => {
       } catch (error) {}
     },
   });
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const { name, value } = event.target;
+    const onchangeValue = [...newOption];
+  
+    if (name in onchangeValue[index]) {
+      onchangeValue[index][name as keyof Option] = value; // Type assertion
+      setNewOption(onchangeValue);
+    }
+  };
   return (
     <Box className="formBodyStyle">
       <form onSubmit={formik.handleSubmit}>
@@ -80,7 +93,7 @@ const AddPoll = () => {
           <TextField
             label={"Title"}
             name="title"
-            value={formik.values.name}
+            value={formik.values.title}
             onChange={formik.handleChange}
           />
           {newOption.map((e, i) => {
@@ -90,20 +103,20 @@ const AddPoll = () => {
                 label={"Option " + (i + 1)}
                 name={`option`}
                 value={e.option}
-                onChange={(event) => handleChange(event, i)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, i)}
               />
             );
           })}
           <Stack direction={"row"} sx={{ justifyContent: "space-between" }}>
             <Fab
-              variant="contained"
+              variant="circular"
               onClick={() => increseLength()}
               color="success"
             >
               <AddIcon />
             </Fab>
             <Fab
-              variant="contained"
+              variant="circular"
               onClick={() => decreseLength()}
               color="error"
             >
@@ -118,7 +131,7 @@ const AddPoll = () => {
           >
             Submit
           </Button>
-          <Link to={"/admin"} width="100%">
+          <Link to={"/admin"} style={{width:"100%"}}>
             <Button sx={{ width: "100%" }} variant="contained">
               Cancel
             </Button>

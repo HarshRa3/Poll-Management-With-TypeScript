@@ -1,13 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Instance from "../Axios/Instance";
-import { dispatch } from "../store";
+import { AppDispatch } from "../store";
+interface LoginState {
+  loading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  data: string[] ;
+}
 
-const initialState = {
+const initialState:LoginState = {
   loading: false,
   isError: false,
   isSuccess: false,
-  data: {},
+  data: [],
 };
+interface Option {
+  option: string;
+}
 
 const AddPoll = createSlice({
   name: "AddPoll",
@@ -17,28 +26,28 @@ const AddPoll = createSlice({
       state.loading = true;
       state.isError = false;
     },
-    loginSuccessful: (state, action) => {
+    loginSuccessful: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = false;
       state.isSuccess = true;
       state.data = { ...action.payload };
     },
-    hasError: (state, action) => {
+    hasError: (state, action:PayloadAction<string[]>) => {
       state.loading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.errorMessage = action.payload;
+      state.data = action.payload;
     },
     resetReducer(state) {
       state.isError = false;
       state.loading = false;
       state.isSuccess = false;
-      state.data = {};
+      state.data = [];
     },
   },
 });
 
-export const AddPollApi = (payload, newOption) => async () => {
+export const AddPollApi = (payload : {title : string}, newOption:Option[]) => async (dispatch:AppDispatch) => {
   dispatch(AddPoll.actions.startLoading());
   try {
     if (newOption.length === 1) {
@@ -64,7 +73,8 @@ export const AddPollApi = (payload, newOption) => async () => {
       dispatch(AddPoll.actions.loginSuccessful(response.data));
     }
   } catch (e) {
-    dispatch(hasError(e));
+    console.log(e);
+    
   }
 };
 

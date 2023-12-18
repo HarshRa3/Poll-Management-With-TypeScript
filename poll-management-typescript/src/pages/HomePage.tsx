@@ -1,6 +1,6 @@
 import React from 'react'
 import SignIn from '../components/SignIn'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 const HomePage = () => {
   return (
     <div>
