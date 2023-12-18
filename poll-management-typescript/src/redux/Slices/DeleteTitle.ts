@@ -52,8 +52,9 @@ export const DeleteTitleApi = (payload:string) => async (dispatch:AppDispatch) =
       `delete_poll?id=${payload}`
     );
     dispatch(loginSuccessful(response.data));
-  } catch (e:any) {
-    dispatch(hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 

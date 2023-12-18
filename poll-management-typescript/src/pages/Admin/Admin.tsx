@@ -74,12 +74,12 @@ const Admin: React.FC = () => {
   const handleRowPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const newRowsPerPage: any = parseInt(event.target.value, 10);
+    const newRowsPerPage: number = parseInt(event.target.value, 10);
     setRowPerPage(newRowsPerPage);
     setPage(0);
-    localStorage.setItem("rowpage", newRowsPerPage);
+    localStorage.setItem("rowpage", newRowsPerPage.toString()); // Convert to string
+    console.log(newRowsPerPage);
   };
-
   const logout = () => {
     localStorage.clear();
     navigate("/");

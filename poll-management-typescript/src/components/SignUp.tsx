@@ -32,10 +32,6 @@ interface LoginData {
   role:string;
 }
 
-interface Decode {
-  role: string;
-}
-
 interface LoginSliceState {
   data: {
     token?: string;

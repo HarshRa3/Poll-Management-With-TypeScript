@@ -1,13 +1,21 @@
+import React, { ReactNode } from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import React from "react";
-// interface pollItemProps{
-//   title:any;
-//   InnerOption:any;
-//   deleteTitle:any;
-//   AddTitle:any;
-//   EditTitle:any  
-// }
-const PollItem:React.FC<any> = ({title,InnerOption,deleteTitle,AddTitle,EditTitle}) => {
+
+interface PollItemProps {
+  title: string;
+  InnerOption: ReactNode;
+  deleteTitle?: ReactNode;
+  AddTitle?: ReactNode;
+  EditTitle?: ReactNode ;
+}
+
+const PollItem: React.FC<PollItemProps> = ({
+  title,
+  InnerOption,
+  deleteTitle,
+  AddTitle,
+  EditTitle,
+}) => {
   return (
     <>
       <Stack
@@ -30,21 +38,13 @@ const PollItem:React.FC<any> = ({title,InnerOption,deleteTitle,AddTitle,EditTitl
             borderRadius: "10px",
           }}
         >
-          <Typography variant="h5" sx={{wordBreak:'break-word',maxWidth:'50%'}} >{title}</Typography>
-          <Stack
-            direction={"row"}
-            spacing={4}
-            sx={{ justifyContent: "center" }}
-          >
-            <Box>
-              {AddTitle}
-            </Box>
-            <Box>
-              {EditTitle}
-            </Box>
-            <Box>
-              {deleteTitle}
-            </Box>
+          <Typography variant="h5" sx={{ wordBreak: "break-word", maxWidth: "50%" }}>
+            {title}
+          </Typography>
+          <Stack direction={"row"} spacing={4} sx={{ justifyContent: "center" }}>
+            <Box>{AddTitle}</Box>
+            <Box>{EditTitle}</Box>
+            <Box>{deleteTitle}</Box>
           </Stack>
         </Stack>
         {InnerOption}

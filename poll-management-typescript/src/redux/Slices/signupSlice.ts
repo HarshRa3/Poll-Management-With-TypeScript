@@ -50,8 +50,9 @@ export const signUpApi = (payload:{name:string,password:string,role:string}) => 
       `add_user?username=${payload.name}&password=${payload.password}&role=${payload.role}`
     );
     dispatch(signUp.actions.loginSuccessful(response.data));
-  } catch (e:any) {
-    dispatch(signUp.actions.hasError(e));
+  } catch (e){
+  console.log(e);
+    
   }
 };
 export const { startLoading, loginSuccessful, hasError, signupResetReducer } = signUp.actions;

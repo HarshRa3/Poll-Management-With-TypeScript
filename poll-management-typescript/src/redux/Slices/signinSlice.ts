@@ -51,8 +51,9 @@ export const signInApi =  (payload:{name:string,password:string})=>async (dispat
       `login?username=${payload.name}&password=${payload.password}`
     );
     dispatch(signIn.actions.loginSuccessful(response.data));
-  } catch (e:any) {
-    dispatch(signIn.actions.hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 export const { startLoading, loginSuccessful, hasError, resetReducer } =

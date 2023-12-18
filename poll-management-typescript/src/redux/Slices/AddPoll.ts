@@ -72,8 +72,9 @@ export const AddPollApi = (payload : {title : string}, newOption:Option[]) => as
       );
       dispatch(AddPoll.actions.loginSuccessful(response.data));
     }
-  } catch (e:any) {
-    dispatch(hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 

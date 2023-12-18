@@ -9,10 +9,11 @@ interface LoginState {
   // errorMessage:string
   data: string[];
 }
-interface headerInter {
-  
-  OptionData : string
-  
+interface Header {
+  headers: {
+    access_token: string;
+    OptionData?: string; // Add this line to include OptionData in the header
+  };
 }
 const initialState:LoginState = {
   loading: false,
@@ -49,15 +50,16 @@ const AddVote = createSlice({
   },
 });
 
-export const AddVoteApi =(VoteId:any,VoteOptionText:any,header:any)=>  async (dispatch:AppDispatch) => {
+export const AddVoteApi =(VoteId:string,VoteOptionText:string,header:Header)=>  async (dispatch:AppDispatch) => {
   dispatch(startLoading());
   try {
     let response = await Instance.get(
         `do_vote?id=${VoteId}&option_text=${VoteOptionText}`, header
     );
     dispatch(AddVote.actions.getSuccess(response.data));
-  } catch (e:any) {
-    dispatch(AddVote.actions.hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 export const { startLoading, getSuccess, hasError, resetReducer } =

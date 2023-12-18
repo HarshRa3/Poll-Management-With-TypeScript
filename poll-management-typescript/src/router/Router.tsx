@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { Route, Routes} from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import SignUp from "../components/SignUp";
 import Admin from "../pages/Admin/Admin";

@@ -46,7 +46,7 @@ const User: React.FC = () => {
   const [rowPerPage, setRowPerPage] = useState(5);
   const rowsPerPageOptions = [5, 10, 15];
 
-  const handlePageChange = (event: any, newPage: number) => {
+  const handlePageChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
     setPage(newPage);
   };
 
@@ -99,7 +99,7 @@ const User: React.FC = () => {
 
   const header: Header = {
     headers: {
-      access_token: token || "", // Ensure token is not null
+      access_token: token || ""
     },
   };
 

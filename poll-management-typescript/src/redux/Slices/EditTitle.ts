@@ -52,8 +52,9 @@ export const EditTitleApi = (titleId:string, titleData:string) => async (dispatc
     );
     dispatch(loginSuccessful(response.data));
     console.log(response.data);
-  } catch (e:any) {
-    dispatch(hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 

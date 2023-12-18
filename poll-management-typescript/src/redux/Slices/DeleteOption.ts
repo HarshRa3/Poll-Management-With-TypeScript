@@ -52,8 +52,10 @@ export const DeleteOptionApi = (optionInd:string, optionText:string) => async (d
     );
     dispatch(loginSuccessful(response.data));
     console.log(response.data);
-  } catch (e:any) {
-    dispatch(hasError(e));
+  } catch (e) {
+    console.log(e);
+    
+    
   }
 };
 

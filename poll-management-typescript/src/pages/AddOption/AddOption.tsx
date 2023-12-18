@@ -15,10 +15,10 @@ const AddOption = () => {
       option: "",
     },
 
-    onSubmit: (values:any) => {
+    onSubmit: (values) => {
       if(values.option.trim() !== ''){
-        dispatch(AddOptionApi(optionId.optionDataId,values));
-        navigate('/admin')     
+        dispatch(AddOptionApi(optionId.optionDataId,values.option));
+        navigate('/admin') 
       }
       else{}
     },

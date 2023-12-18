@@ -52,8 +52,9 @@ export const AdminPollApi =()=>  async (dispatch:AppDispatch) => {
       `list_polls`
     );
     dispatch(AdminPoll.actions.getSuccess(response.data));
-  } catch (e:any) {
-    dispatch(AdminPoll.actions.hasError(e));
+  } catch (e) {
+    console.log(e);
+    
   }
 };
 export const { startLoading, getSuccess, hasError, resetReducer } =

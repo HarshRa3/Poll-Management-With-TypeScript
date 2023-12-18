@@ -49,8 +49,9 @@ export const AddOptionApi =(OptionId:string,OptionData:string)=>  async (dispatc
   try {
     let response = await Instance.post(`add_new_option?id=${OptionId}&option_text=${OptionData}`)
     dispatch(AddOption.actions.getSuccess(response.data));
-  } catch (e:any) {
-    dispatch(AddOption.actions.hasError(e));
+  } catch (e) {
+    console.log(e);
+     
   }
 };
 export const { startLoading, getSuccess, hasError, resetReducer } =

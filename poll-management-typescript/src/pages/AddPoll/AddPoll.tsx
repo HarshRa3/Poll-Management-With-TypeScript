@@ -74,7 +74,7 @@ const AddPoll = () => {
       } catch (error) {}
     },
   });
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, index: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const { name, value } = event.target;
     const onchangeValue = [...newOption];
   
